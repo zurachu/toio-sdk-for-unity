@@ -257,6 +257,8 @@ namespace toio
         /// <param name="order">命令の優先度</param>
         public virtual UniTask ConfigMotorRead(bool valid, float timeOutSec = 0.5f, Action<bool,Cube> callback = null, ORDER_TYPE order = ORDER_TYPE.Strong) { NotSupportedWarning(); return UniTask.CompletedTask; }
 
+
+        public virtual void MultiTest(){}
         //_/_/_/_/_/_/_/_/_/_/_/_/_/
         //      コールバック
         //_/_/_/_/_/_/_/_/_/_/_/_/_/

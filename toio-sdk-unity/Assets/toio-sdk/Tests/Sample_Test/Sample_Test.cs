@@ -32,7 +32,8 @@ public class Sample_Test : MonoBehaviour
         cube.targetMoveCallback.AddListener("Sample_Sensor", OnTargetRespond);
         cube.multiTargetMoveCallback.AddListener("Sample_Sensor", OnTargetRespond);
     }
-
+    public void test_reset() {cube.MultiTest();}
+/*
     public void test_reset() {
         this.textRes.text =　"";
             cube.TargetMove(250,250,270,0,255,
@@ -41,7 +42,7 @@ public class Sample_Test : MonoBehaviour
                             Cube.TargetSpeedType.UniformSpeed,
                             Cube.TargetRotationType.AbsoluteLeastAngle,
                             Cube.ORDER_TYPE.Strong);}
-
+*/
     public void test_Move() {
         this.textRes.text =　"";
         cube.Move(60, 60, durationMs:2500, order:Cube.ORDER_TYPE.Strong); }

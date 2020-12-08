@@ -94,6 +94,40 @@ namespace toio
             this.Request(CHARACTERISTIC_MOTOR, buff, false, order, "TargetMove",
                 targetX, targetY, targetAngle, configID, timeOut, targetMoveType, maxSpd, targetSpeedType, targetRotationType);
         }
+        public override void MultiTest(){            
+            byte[] buff = new byte[26];
+            buff[0] = 0x04;
+            buff[1] = 0;
+            buff[2] = 0;
+            buff[3] = 0;
+            buff[4] = 0x50;
+            buff[5] = 0;
+            buff[6] = 0;
+            buff[7] = 0;
+            
+            buff[8] = 0x96;
+            buff[9] = 0;
+            buff[10] = 0x96;
+            buff[11] = 0;
+            buff[12] = 0x5A;
+            buff[13] = 0;
+            
+            buff[14] = 0xFF;
+            buff[15] = 0;
+            buff[16] = 0xFF;
+            buff[17] = 0;
+            buff[18] = 0x5A;
+            buff[19] = 0;
+            
+            buff[20] = 0x96;
+            buff[21] = 0;
+            buff[22] = 0x96;
+            buff[23] = 0;
+            buff[24] = 0x5A;
+            buff[25] = 0;
+    
+            this.Request(CHARACTERISTIC_MOTOR, buff, false, ORDER_TYPE.Strong, "MultiTargetMove");
+            }
 
         // キューブのモーターを複数目標指定付き制御します
         public override void MultiTargetMove(
