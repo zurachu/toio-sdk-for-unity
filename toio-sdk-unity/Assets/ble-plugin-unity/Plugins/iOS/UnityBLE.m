@@ -34,11 +34,11 @@ NotifiedCharacteristicActionCallback notifiedCharacteristicActionCallback = nil;
 typedef void (^Rejection) (NSString *errorCode, NSString *errorMessage, NSError *error);
 
 Rejection rejection = ^(NSString *errorCode, NSString *errorMessage, NSError *error) {
-#ifdef DEBUG
+//#ifdef DEBUG
     NSLog(@"rejection: errorCode = %@", errorCode);
     NSLog(@"rejection: errorMessage = %@", errorMessage);
     NSLog(@"rejection: error = %@", error);
-#endif
+//#endif
     if (errorActionCallback != nil) {
         errorActionCallback([errorCode UTF8String], [errorMessage UTF8String], [error.description UTF8String]);
     }
@@ -171,7 +171,10 @@ void _uiOSReadCharacteristicForDevice(const char* identifier, const char* servic
 
 void _uiOSWriteCharacteristicForDevice(const char* identifier, const char* serviceUUID, const char* characteristicUUID, const char* data, int length, BOOL withResponse, DidWriteCharacteristicActionCallback didWriteCharacteristicCallback) {
     if (_bleModule != nil) {
+        NSLog(@"write: %@", [NSString stringWithUTF8String:data]);
+
         [_bleModule writeCharacteristicForDevice:[NSString stringWithUTF8String:identifier] serviceUUID:[NSString stringWithUTF8String:serviceUUID] characteristicUUID:[NSString stringWithUTF8String:characteristicUUID] valueBase64:[NSString stringWithUTF8String:data] withResponse:withResponse transactionId:nextUniqueId() resolver:^(NSDictionary *characteristic) {
+            NSLog(@"write: did");
             if (didWriteCharacteristicCallback != nil) {
                 didWriteCharacteristicCallback([[characteristic valueForKey:@"deviceID"] UTF8String], [[characteristic valueForKey:@"uuid"] UTF8String]);
             }
