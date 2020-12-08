@@ -32,7 +32,7 @@ public class Sample_Test : MonoBehaviour
         cube.targetMoveCallback.AddListener("Sample_Sensor", OnTargetRespond);
         cube.multiTargetMoveCallback.AddListener("Sample_Sensor", OnTargetRespond);
     }
-    public void test_reset() {cube.MultiTest();}
+    public void test_Mutitest() {cube.MultiTest();}
 /*
     public void test_reset() {
         this.textRes.text =　"";
