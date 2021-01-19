@@ -47,7 +47,7 @@ namespace toio
             else
             {
                 // プリセットで用意したマルチプラットフォーム内部実装(UnityEditor/Mobile/WebGL)
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE || TOIO_SIM
                 this.impl = new SimImpl(satisfiedNum);
 #elif (UNITY_ANDROID || UNITY_IOS)
                 this.impl = new RealImpl(satisfiedNum);
