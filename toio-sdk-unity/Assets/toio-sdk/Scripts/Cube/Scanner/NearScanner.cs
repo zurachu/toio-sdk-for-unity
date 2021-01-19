@@ -47,7 +47,13 @@ namespace toio
             else
             {
                 // プリセットで用意したマルチプラットフォーム内部実装(UnityEditor/Mobile/WebGL)
-                this.impl = new Impl(satisfiedNum);
+#if UNITY_EDITOR || UNITY_STANDALONE
+                this.impl = new SimImpl(satisfiedNum);
+#elif (UNITY_ANDROID || UNITY_IOS)
+                this.impl = new RealImpl(satisfiedNum);
+#elif UNITY_WEBGL
+                this.impl = new RealImpl(satisfiedNum);
+#endif
             }
         }
 
@@ -61,11 +67,10 @@ namespace toio
             this.impl.ScanAsync(coroutineObject, callback, autoRunning);
         }
 
-#if UNITY_EDITOR || UNITY_STANDALONE
         /// <summary>
         /// Impl for Unity.
         /// </summary>
-        public class Impl : NearScannerInterface
+        public class SimImpl : NearScannerInterface
         {
             // --- public fields ---
             public int satisfiedNum { get; }
@@ -77,7 +82,7 @@ namespace toio
             private List<UnityPeripheral> peripheralList = new List<UnityPeripheral>();
 
             // --- public methods ---
-            public Impl(int satisfiedNum)
+            public SimImpl(int satisfiedNum)
             {
                 this.satisfiedNum = satisfiedNum;
             }
@@ -122,11 +127,11 @@ namespace toio
                 this.peripheralList.Add(peri);
             }
         }
-#elif (UNITY_IOS || UNITY_ANDROID || UNITY_WEBGL)
+#if (UNITY_IOS || UNITY_ANDROID || UNITY_WEBGL)
         /// <summary>
         /// Impl for Mobile(iOS, Android) and WebGL
         /// </summary>
-        public class Impl : NearScannerInterface
+        public class RealImpl : NearScannerInterface
         {
             // --- public fields ---
             public int satisfiedNum { get; private set; }
@@ -145,7 +150,7 @@ namespace toio
             private bool autoRunning;
 
             // --- public methods ---
-            public Impl(int satisfiedNum)
+            public RealImpl(int satisfiedNum)
             {
                 this.satisfiedNum = satisfiedNum;
                 this.isScanning = false;

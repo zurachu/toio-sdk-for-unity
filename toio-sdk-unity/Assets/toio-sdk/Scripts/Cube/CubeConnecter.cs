@@ -31,7 +31,13 @@ namespace toio
             else
             {
                 // プリセットで用意したマルチプラットフォーム内部実装(UnityEditor/Mobile/WebGL)
-                this.impl = new Impl();
+#if UNITY_EDITOR || UNITY_STANDALONE
+                this.impl = new SimImpl();
+#elif (UNITY_ANDROID || UNITY_IOS)
+                this.impl = new RealImpl();
+#elif UNITY_WEBGL
+                this.impl = new RealImpl();
+#endif
             }
         }
 
@@ -52,9 +58,7 @@ namespace toio
             await this.impl.ReConnect(cube, peripheral);
         }
 
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-        public class Impl : CubeConnecterInterface
+        public class SimImpl : CubeConnecterInterface
         {
             public async UniTask<Cube> Connect(BLEPeripheralInterface peripheral)
             {
@@ -86,14 +90,10 @@ namespace toio
                 return default;
             }
         }
-#elif (UNITY_IOS || UNITY_ANDROID)
-        public class Impl : CubeConnecterInterface
+#if (UNITY_IOS || UNITY_ANDROID)
+        public class RealImpl : CubeConnecterInterface
         {
             private bool isConnecting = false;
-
-            public Impl()
-            {
-            }
 
             public async UniTask<Cube> Connect(BLEPeripheralInterface peripheral)
             {
@@ -250,13 +250,9 @@ namespace toio
             }
         }
 #elif UNITY_WEBGL
-        public class Impl : CubeConnecterInterface
+        public class RealImpl : CubeConnecterInterface
         {
             private bool isConnecting = false;
-
-            public Impl()
-            {
-            }
 
             public async UniTask<Cube> Connect(BLEPeripheralInterface peripheral)
             {

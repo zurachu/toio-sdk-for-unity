@@ -24,7 +24,13 @@ namespace toio
             else
             {
                 // プリセットで用意したマルチプラットフォーム内部実装(UnityEditor/Mobile/WebGL)
-                this.impl = new Impl();
+#if UNITY_EDITOR || UNITY_STANDALONE
+                this.impl = new SimImpl();
+#elif (UNITY_ANDROID || UNITY_IOS)
+                this.impl = new RealImpl();
+#elif UNITY_WEBGL
+                this.impl = new RealImpl();
+#endif
             }
         }
 
@@ -33,11 +39,10 @@ namespace toio
             return await this.impl.Scan();
         }
 
-#if UNITY_EDITOR || UNITY_STANDALONE
         /// <summary>
         /// Impl for Unity.
         /// </summary>
-        public class Impl : NearestScannerInterface
+        public class SimImpl : NearestScannerInterface
         {
             private HashSet<int> IDHash = new HashSet<int>();
             public UniTask<BLEPeripheralInterface> Scan()
@@ -54,15 +59,15 @@ namespace toio
                 return UniTask.FromResult<BLEPeripheralInterface>(null);
             }
         }
-#elif (UNITY_ANDROID || UNITY_IOS)
+#if (UNITY_ANDROID || UNITY_IOS)
         /// <summary>
         /// Impl for Mobile(iOS, Android).
         /// </summary>
-        public class Impl : NearestScannerInterface
+        public class RealImpl : NearestScannerInterface
         {
             private Dictionary<string, BLEPeripheralInterface> peripheralTable = new Dictionary<string, BLEPeripheralInterface>();
 
-            public Impl()
+            public RealImpl()
             {
                 if(!BLEService.Instance.hasImplement)
                 {
@@ -122,11 +127,11 @@ namespace toio
         /// <summary>
         /// Impl for WebGL.
         /// </summary>
-        public class Impl : NearestScannerInterface
+        public class RealImpl : NearestScannerInterface
         {
             private Dictionary<string, BLEPeripheralInterface> peripheralTable = new Dictionary<string, BLEPeripheralInterface>();
 
-            public Impl()
+            public RealImpl()
             {
                 if(!BLEService.Instance.hasImplement)
                 {
