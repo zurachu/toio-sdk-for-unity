@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5597929066422657874}
-  - component: {fileID: 6191860066900857981}
+  - component: {fileID: 1518568461734810083}
   - component: {fileID: 327783822250526593}
   - component: {fileID: 5895019345681853483}
+  - component: {fileID: 6191860066900857981}
   - component: {fileID: 6352447562411728856}
   - component: {fileID: 6663199508904671866}
   - component: {fileID: 4565272494610323839}
@@ -40,22 +41,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &6191860066900857981
-Rigidbody:
+--- !u!114 &1518568461734810083
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3909610859877989875}
-  serializedVersion: 2
-  m_Mass: 0.01
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 960efb4d4b2df2544b8950f08060f1b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roleNonEditor: 0
 --- !u!114 &327783822250526593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +83,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a58decd716d484cb6fa1f83af5d984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &6191860066900857981
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3909610859877989875}
+  serializedVersion: 2
+  m_Mass: 0.01
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!82 &6352447562411728856
 AudioSource:
   m_ObjectHideFlags: 0

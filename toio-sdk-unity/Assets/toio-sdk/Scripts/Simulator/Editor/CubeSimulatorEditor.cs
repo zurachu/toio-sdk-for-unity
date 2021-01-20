@@ -15,9 +15,7 @@ namespace toio.Simulator
         public override void OnInspectorGUI()
         {
             var cube = target as CubeSimulator;
-
-            EditorGUILayout.LabelField("【シミュレータの設定】");
-            EditorGUILayout.BeginVertical(GUI.skin.box);
+            if (!cube.enabled) return;
 
             serializedObject.Update();
             var version = serializedObject.FindProperty("version");
@@ -25,35 +23,35 @@ namespace toio.Simulator
             var delay = serializedObject.FindProperty("delay");
             var forceStop = serializedObject.FindProperty("forceStop");
 
-            // version
+
+            // ==== 【シミュレータの設定】 ====
+
+            EditorGUILayout.LabelField("【シミュレータの設定】");
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+
             if (!EditorApplication.isPlaying)
             {
                 base.OnInspectorGUI();
-                // version.intValue = (int)EditorGUILayout.Popup("Version",
-                //     (int)version.intValue, versionNames
-                // );
-            }
-            else
-            {
-                EditorGUILayout.LabelField("Version", versionNames[version.intValue]);
-                EditorGUILayout.LabelField("Motor Tau", motorTau.floatValue.ToString());
-                EditorGUILayout.LabelField("Delay", delay.floatValue.ToString());
-                forceStop.boolValue = EditorGUILayout.Toggle("Force Stop", forceStop.boolValue);
-                serializedObject.ApplyModifiedProperties();
+                EditorGUILayout.EndVertical();
+                return;
             }
 
+            EditorGUILayout.LabelField("Version", versionNames[version.intValue]);
+            EditorGUILayout.LabelField("Motor Tau", motorTau.floatValue.ToString());
+            EditorGUILayout.LabelField("Delay", delay.floatValue.ToString());
+            forceStop.boolValue = EditorGUILayout.Toggle("Force Stop", forceStop.boolValue);
+            serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
 
             // ==== 【手動でキューブの状態を模擬】 ====
             // 実行時のみに表示
-            if (EditorApplication.isPlaying)
+
+            EditorGUILayout.LabelField("【手動でキューブの状態を変更】");
+            EditorGUILayout.BeginVertical(GUI.skin.box);
             {
-                EditorGUILayout.Space();
-                EditorGUILayout.Space();
-
-                EditorGUILayout.LabelField("【手動でキューブの状態を変更】");
-                EditorGUILayout.BeginVertical(GUI.skin.box);
-
                 var button_new = GUILayout.Toggle(cube.button, "button 状態");
                 if (cube.button!=button_new){
                     cube.button = button_new;
@@ -118,9 +116,8 @@ namespace toio.Simulator
                     }
                     EditorGUILayout.Space();
                 }
-
-                EditorGUILayout.EndVertical();
             }
+            EditorGUILayout.EndVertical();
 
         }
 

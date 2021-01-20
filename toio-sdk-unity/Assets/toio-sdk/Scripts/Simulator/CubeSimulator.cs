@@ -163,40 +163,20 @@ namespace toio.Simulator
         /// </summary>
         public int rightMotorSpeed{ get {return impl.rightMotorSpeed;} }
 
-
-        // ======== Objects ========
-        private Rigidbody rb;
-        private AudioSource audioSource;
-        private GameObject cubeModel;
-        private GameObject LED;
-        private BoxCollider col;
-
         private CubeSimImpl impl;
-
+        internal CubeAvatar avatar;
 
 
         private void Start()
         {
-            #if !(UNITY_EDITOR || UNITY_STANDALONE)   // Editor以外で実行される場合は自身を無効かします
-                this.gameObject.SetActive(false);
-            #else
-                this.rb = GetComponent<Rigidbody>();
-                this.rb.maxAngularVelocity = 21f;
-                this.audioSource = GetComponent<AudioSource>();
-                this.LED = transform.Find("LED").gameObject;
-                this.LED.GetComponent<Renderer>().material.color = Color.black;
-                this.cubeModel = transform.Find("cube_model").gameObject;
-                this.col = GetComponent<BoxCollider>();
-
-                switch (version)
-                {
-                    case Version.v2_0_0 : this.impl = new CubeSimImpl_v2_0_0(this);break;
-                    case Version.v2_1_0 : this.impl = new CubeSimImpl_v2_1_0(this);break;
-                    case Version.v2_2_0 : this.impl = new CubeSimImpl_v2_2_0(this);break;
-                    default : this.impl = new CubeSimImpl_v2_2_0(this);break;
-                }
-                this._InitPresetSounds();
-            #endif
+            this.avatar = GetComponent<CubeAvatar>();
+            switch (version)
+            {
+                case Version.v2_0_0 : this.impl = new CubeSimImpl_v2_0_0(this);break;
+                case Version.v2_1_0 : this.impl = new CubeSimImpl_v2_1_0(this);break;
+                case Version.v2_2_0 : this.impl = new CubeSimImpl_v2_2_0(this);break;
+                default : this.impl = new CubeSimImpl_v2_2_0(this);break;
+            }
         }
 
         private void Update()
@@ -456,65 +436,6 @@ namespace toio.Simulator
         {
             impl.ConfigMotorRead(enabled);
         }
-
-
-        // ====== 内部関数 ======
-
-        // 速度変化によって力を与え、位置と角度を更新
-        internal void _SetSpeed(float speedL, float speedR)
-        {
-            this.rb.angularVelocity = transform.up * (float)((speedL - speedR) / TireWidthM);
-            var vel = transform.forward * (speedL + speedR) / 2;
-            var dv = vel - this.rb.velocity;
-            this.rb.AddForce(dv, ForceMode.VelocityChange);
-        }
-        internal void _SetLight(int r, int g, int b){
-            r = Mathf.Clamp(r, 0, 255);
-            g = Mathf.Clamp(g, 0, 255);
-            b = Mathf.Clamp(b, 0, 255);
-            LED.GetComponent<Renderer>().material.color = new Color(r/255f, g/255f, b/255f);
-        }
-
-        internal void _StopLight(){
-            LED.GetComponent<Renderer>().material.color = Color.black;
-        }
-
-        private int playingSoundId = -1;
-        internal void _PlaySound(int soundId, int volume){
-            if (soundId >= 128) { _StopSound(); playingSoundId = -1; return; }
-            if (soundId != playingSoundId)
-            {
-                playingSoundId = soundId;
-                int octave = (int)(soundId/12);
-                int idx = (int)(soundId%12);
-                var aCubeOnSlot = Resources.Load("Octave/" + (octave*12+9)) as AudioClip;
-                audioSource.pitch = (float)Math.Pow(2, ((float)idx-9)/12);
-                audioSource.clip = aCubeOnSlot;
-            }
-            audioSource.volume = (float)volume/256;
-            if (!audioSource.isPlaying)
-                audioSource.Play();
-        }
-        internal void _StopSound(){
-            audioSource.clip = null;
-            audioSource.Stop();
-        }
-
-        // Sound Preset を設定
-        internal void _InitPresetSounds(){
-            Cube.SoundOperation[] sounds = new Cube.SoundOperation[3];
-            sounds[0] = new Cube.SoundOperation(200, 255, 48);
-            sounds[1] = new Cube.SoundOperation(200, 255, 50);
-            sounds[2] = new Cube.SoundOperation(200, 255, 52);
-            impl.presetSounds.Add(sounds);
-        }
-
-        internal void _SetPressed(bool pressed)
-        {
-            this.cubeModel.transform.localEulerAngles
-                    = pressed? new Vector3(-93,0,0) : new Vector3(-90,0,0);
-        }
-
 
 
     }

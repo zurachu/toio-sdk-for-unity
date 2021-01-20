@@ -144,7 +144,7 @@ namespace toio.Simulator
             speedL = cube.offGroundL? 0: speedTireL;
             speedR = cube.offGroundR? 0: speedTireR;
 
-            cube._SetSpeed(speedL, speedR);
+            cube.avatar.SetSpeed(speedL, speedR);
         }
 
 

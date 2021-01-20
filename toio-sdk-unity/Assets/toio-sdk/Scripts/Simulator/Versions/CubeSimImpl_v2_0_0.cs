@@ -121,7 +121,7 @@ namespace toio.Simulator
                     this.buttonCallback?.Invoke(value);
                 }
                 this._button = value;
-                cube._SetPressed(value);
+                cube.avatar.SetPressed(value);
             }
         }
         protected System.Action<bool> buttonCallback = null;
@@ -257,14 +257,14 @@ namespace toio.Simulator
             if (currLightCmd.tRecv >= currLightSenarioCmd.tRecv)    // light cmd
             {
                 if (currLightCmd.duration==0 || lightCmdElipsed < currLightCmd.duration/1000f)
-                    cube._SetLight(currLightCmd.r, currLightCmd.g, currLightCmd.b);
-                else cube._StopLight();
+                    cube.avatar.SetLight(currLightCmd.r, currLightCmd.g, currLightCmd.b);
+                else cube.avatar.StopLight();
             }
             else    // light senario cmd
             {
                 if (currLightSenarioCmd.period==0
                     || currLightSenarioCmd.repeat>0 && currLightSenarioCmd.period*currLightSenarioCmd.repeat <= lightCmdElipsed){
-                    cube._StopLight();
+                    cube.avatar.StopLight();
                 }
                 else
                 {
@@ -277,7 +277,7 @@ namespace toio.Simulator
                             break;
                         }
                     }
-                    cube._SetLight(lights[index].red, lights[index].green, lights[index].blue);
+                    cube.avatar.SetLight(lights[index].red, lights[index].green, lights[index].blue);
                 }
             }
         }
@@ -308,7 +308,7 @@ namespace toio.Simulator
             // ----- Excute Order -----
             if (currSoundSenarioCmd.period==0
                 || currSoundSenarioCmd.repeat>0 && currSoundSenarioCmd.period*currSoundSenarioCmd.repeat <= soundCmdElipsed)
-                cube._StopSound();
+                cube.avatar.StopSound();
             else
             {
                 // Index of current operation
@@ -320,7 +320,7 @@ namespace toio.Simulator
                         break;
                     }
                 }
-                cube._PlaySound(sounds[index].note_number, sounds[index].volume);
+                cube.avatar.PlaySound(sounds[index].note_number, sounds[index].volume);
             }
         }
 
