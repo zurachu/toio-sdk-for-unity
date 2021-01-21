@@ -91,15 +91,29 @@ namespace toio.Simulator
 
 
         // ---- Transform ----
-        private Func<GameObject, Vector2Int, Vector3> _coordTransromFunc = DefaultCoordTransformFunc;
-        public void SetCoordTransfomFunc(Func<GameObject, Vector2Int, Vector3> func)
+        private Func<GameObject, Vector3Int, (Vector3, Vector3)> _coordTransromFunc = DefaultCoordTransformFunc;
+        public void SetCoordTransfomFunc(Func<GameObject, Vector3Int, (Vector3, Vector3)> func)
         {
             this._coordTransromFunc = func;
         }
-        private static Vector3 DefaultCoordTransformFunc(GameObject obj, Vector2Int coord)
+        private static (Vector3, Vector3) DefaultCoordTransformFunc(GameObject obj, Vector3Int coord_deg)
         {
-            // TODO
-            return Vector3.zero;
+            var loc = Vector3.zero;
+            var deg = Vector3.zero;
+
+            var mat = obj.GetComponent<Mat>();
+            loc = Mat.MatCoord2UnityCoord(coord_deg.x, coord_deg.y, mat);
+            deg = new Vector3(0, Mat.MatDeg2UnityDeg(coord_deg.z, mat), 0);
+            return (loc, deg);
+        }
+
+        // ---- Real Callbacks ----
+        private void OnUpdateID(Cube cube)
+        {
+            Vector3 locU, degU;
+            (locU, degU) = _coordTransromFunc(this.mat.gameObject, new Vector3Int(cube.x, cube.y, cube.angle));
+            this.transform.position = locU;
+            this.transform.eulerAngles = degU;
         }
 
 
@@ -113,9 +127,10 @@ namespace toio.Simulator
             dictCubeAvatar.Add(cube, this);
 
             // TODO
-            // cube.collisionCallback.AddListener(this.GetInstanceID(), OnCollision);
-            // cube.idCallback.AddListener("Sample_Sensor", OnUpdateID);
-            // cube.standardIdCallback.AddListener("Sample_Sensor", OnUpdateStandardId);
+            string id = this.GetInstanceID().ToString();
+            // cube.collisionCallback.AddListener(id, OnCollision);
+            cube.idCallback.AddListener(id, OnUpdateID);
+            // cube.standardIdCallback.AddListener(id, OnUpdateStandardId);
         }
         public void UninitWithRealCube(Cube cube)
         {
@@ -126,6 +141,8 @@ namespace toio.Simulator
             dictCubeAvatar.Remove(cube);
 
             // TODO
+            string id = this.GetInstanceID().ToString();
+            cube.idCallback.RemoveListener(id);
         }
 
         public static void PairCubes(List<Cube> cubes, bool depairNotListed=false)
